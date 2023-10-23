@@ -13,9 +13,6 @@
 
     export let form: ActionData;
 
-    let email: string;
-    let password: string;
-
     let showLoadingButton = false;
 
     let progressiveWrongEmail = false;
@@ -70,16 +67,16 @@
             <Card.Content class="space-y-2">
                 <div class="space-y-1">
                     <Label for="user_email">E-Mail</Label>
-                    <Input type="text" id="user_email" name="user_email" bind:value={email} class="{progressiveWrongEmail || formHasError ? "border-2 border-rose-600" : ""}"/>
+                    <Input type="text" id="user_email" name="user_email" class="{progressiveWrongEmail || formHasError ? "border-2 border-rose-600" : ""}"/>
                     {#if progressiveWrongEmail}
                         <p class="text-sm text-muted-foreground text-red-600">E-Mail ist nicht gültig</p>
-                    {:else if formHasError} 
+                    {:else if formHasError}
                         <p class="text-sm text-muted-foreground text-red-600">E-Mail und/oder Passwort sind falsch</p>
                     {/if}
                 </div>
                 <div class="space-y-1">
                     <Label for="user_password">Password</Label>
-                    <Input id="user_password" name="user_password" type="password"  bind:value={password} class="{formHasError || passwordTooShort ? "border-2 border-rose-600" : ""}"/>
+                    <Input id="user_password" name="user_password" type="password" class="{formHasError || passwordTooShort ? "border-2 border-rose-600" : ""}"/>
                     {#if passwordTooShort}
                         <p class="text-sm text-muted-foreground text-red-600">Passwort ist zu kurz</p>
                     {:else if formHasError}

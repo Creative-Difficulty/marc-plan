@@ -1,13 +1,14 @@
-import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public'
-import { createSupabaseServerClient } from '@supabase/auth-helpers-sveltekit'
-import { redirect, type Handle } from '@sveltejs/kit'
+import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from "$env/static/public"
+import { createSupabaseServerClient } from "@supabase/auth-helpers-sveltekit"
+import { redirect, type Handle } from "@sveltejs/kit";
+import toast from "svelte-french-toast";
 
 export const handle: Handle = async ({ event, resolve }) => {
     event.locals.supabase = createSupabaseServerClient({
       supabaseUrl: PUBLIC_SUPABASE_URL,
       supabaseKey: PUBLIC_SUPABASE_ANON_KEY,
       event,
-    })
+    });
   
     /**
      * a little helper that is written for convenience so that instead
@@ -20,11 +21,12 @@ export const handle: Handle = async ({ event, resolve }) => {
       } = await event.locals.supabase.auth.getSession()
       return session;
     }
-    
+
     if(event.url.pathname === "/") {
-        const session = await event.locals.getSession()
+        let session = await event.locals.getSession()
         console.log(session);
         if (!session) {
+            toast.error("Nicht eingeloggt.");
             throw redirect(303, "/login");
         }
     }

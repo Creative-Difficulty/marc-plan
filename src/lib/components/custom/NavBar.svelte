@@ -4,7 +4,7 @@
     import toast from 'svelte-french-toast';
     import { goto, invalidateAll } from '$app/navigation';
     import { page } from '$app/stores';
-    import type { SupabaseClient } from '@supabase/supabase-js';
+    import type { AuthError, Session, SupabaseClient } from '@supabase/supabase-js';
     import type { Database } from '$lib/supabase-types';
     export const ssr = false;
     export let supabase: SupabaseClient<Database, "public", {
@@ -14,23 +14,21 @@
         Enums: {};
         CompositeTypes: {};
     }>
-    async function handleGotoDashboard() {
-        let session = await supabase.auth.getSession();
-        if($page.data.session === null || session.data.session === null) {
-            goto("/login")
-        } else {
-            goto("/")
-        }
-    }
-
+    let session: { data: { session: Session; }; error: null; } | { data: { session: null; }; error: AuthError; } | { data: { session: null; }; error: null; };
     async function handleSignOut() {
-        const logOutResponse = await supabase.auth.signOut();
-        
-        if(logOutResponse.error === null) {
-            toast.success("Erfolgreich ausgeloggt");
-            goto("/login");
+        session = await supabase.auth.getSession();
+        console.log(session);
+        if(session.data.session !== null) {
+            const logOutResponse = await supabase.auth.signOut();
+            
+            if(logOutResponse.error === null) {
+                toast.success("Erfolgreich ausgeloggt.");
+                goto("/login");
+            } else {
+                toast.error(`Fehler während des ausloggens: ${logOutResponse.error.message}`);
+            }
         } else {
-            toast.error(`Fehler während des ausloggens: ${logOutResponse.error.message}`);
+            toast.error("Nicht eingeloggt.")
         }
     }
 </script>

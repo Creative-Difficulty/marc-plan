@@ -6,10 +6,10 @@ export const actions = {
         const password = formData.get("user_password") as string
         const { error } = await supabase.auth.signUp({
             email,
-            password
-            // options: {
-            //   emailRedirectTo: `${url.origin}/auth/callback`,
-            // },
+            password,
+            options: {
+              emailRedirectTo: `${url.origin}/auth/callback`,
+            },
         });
         return {
             action: "registriert",
