@@ -20,9 +20,9 @@ module.exports = {
 		node: true
 	},
 	rules: {
-        "no-unused-vars": "off",
-        "@typescript-eslint/no-unused-vars": ["error"],
-        "no-control-regex": 0
+		'no-unused-vars': 'off',
+		'@typescript-eslint/no-unused-vars': ['error'],
+		'no-control-regex': 0
 	},
 	overrides: [
 		{

@@ -3,10 +3,9 @@
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
-	import { LogIn } from 'lucide-svelte';
-	import { Loader2 } from 'lucide-svelte';
+	import { LogIn, Loader2 } from 'lucide-svelte';
 	import toast from 'svelte-french-toast';
-	import { goto } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import './login.postcss';
 	import { enhance } from '$app/forms';
 	import type { ActionData } from './$types';
@@ -22,11 +21,13 @@
 
 	$: if (form?.error === null) {
 		toast.success(`Erfolgreich ${form.action}`);
-        if(browser) {
-            goto('/login', { invalidateAll: true });
-        }
+		if (browser) {
+			// goto('/', { invalidateAll: true });
+			window.location.href = `${window.location.protocol}//${window.location.host}`;
+			// async () => await invalidateAll();
+		}
 	} else if (form?.error !== null && form?.error !== undefined) {
-		if (form?.error === "User already registered") formHasError = false;
+		if (form?.error === 'User already registered') formHasError = false;
 		toast.error(`Fehler: ${form.error}`);
 	}
 </script>
@@ -74,34 +75,20 @@
 			<Card.Content class="space-y-2">
 				<div class="space-y-1">
 					<Label for="user_email">E-Mail</Label>
-					<Input
-						type="text"
-						id="user_email"
-						name="user_email"
-						class={progressiveWrongEmail || formHasError ? 'border-2 border-rose-600' : ''}
-					/>
+					<Input type="text" id="user_email" name="user_email" class={progressiveWrongEmail || formHasError ? 'border-2 border-rose-600' : ''} />
 					{#if progressiveWrongEmail}
 						<p class="text-sm text-muted-foreground text-red-600">E-Mail ist nicht gültig</p>
 					{:else if formHasError}
-						<p class="text-sm text-muted-foreground text-red-600">
-							E-Mail und/oder Passwort sind falsch
-						</p>
+						<p class="text-sm text-muted-foreground text-red-600">E-Mail und/oder Passwort sind falsch</p>
 					{/if}
 				</div>
 				<div class="space-y-1">
 					<Label for="user_password">Password</Label>
-					<Input
-						id="user_password"
-						name="user_password"
-						type="password"
-						class={formHasError || passwordTooShort ? 'border-2 border-rose-600' : ''}
-					/>
+					<Input id="user_password" name="user_password" type="password" class={formHasError || passwordTooShort ? 'border-2 border-rose-600' : ''} />
 					{#if passwordTooShort}
 						<p class="text-sm text-muted-foreground text-red-600">Passwort ist zu kurz</p>
 					{:else if formHasError}
-						<p class="text-sm text-muted-foreground text-red-600">
-							Passwort und/oder E-Mail sind falsch
-						</p>
+						<p class="text-sm text-muted-foreground text-red-600">Passwort und/oder E-Mail sind falsch</p>
 					{/if}
 				</div>
 			</Card.Content>
@@ -125,13 +112,7 @@
 						</Button>
 					{:else}
 						<!-- class="w-30 h-10" -->
-						<Button
-							type="submit"
-							formaction="?/register"
-							class="sm:{buttonVariants({ size: 'sm' })}"
-						>
-							Registrieren
-						</Button>
+						<Button type="submit" formaction="?/register" class="sm:{buttonVariants({ size: 'sm' })}">Registrieren</Button>
 					{/if}
 				</div>
 			</Card.Footer>
