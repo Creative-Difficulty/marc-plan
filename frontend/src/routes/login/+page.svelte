@@ -21,6 +21,7 @@
         formInputsHaveError = false;
 		toast.success(`Erfolgreich ${form?.action === "register" ? "registriert." : "eingeloggt."}`);
 		if (browser && form?.action === "login") {
+            // goto("/");
             goto("/", { invalidateAll: true });
 		}
 	} else if (form?.error !== null && form?.error !== undefined) {
@@ -40,7 +41,6 @@
 			on:submit={() => (showLoadingButton = true)}
 			use:enhance={({ formData, cancel }) => {
 				showLoadingButton = true;
-				// `formElement` is this `<form>` element        // `formData` is its `FormData` object that's about to be submitted        // `action` is the URL to which the form is posted        // calling `cancel()` will prevent the submission        // `submitter` is the `HTMLElement` that caused the form to be submitted
 				const formDataObjects = Object.fromEntries(formData);
 
 				const isEmail = new RegExp(

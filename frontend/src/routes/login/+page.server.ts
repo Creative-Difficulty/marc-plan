@@ -1,4 +1,3 @@
-import { dev } from '$app/environment';
 import type { Actions } from './$types';
 
 export const actions: Actions = {
@@ -16,17 +15,16 @@ export const actions: Actions = {
             
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch(error: any) {
-            console.log(error);
             return {
                 action: "register",
                 message: null,
-                error: `Fehler beim registrieren: ${error.response.message}`
+                error: `Fehler beim registrieren: ${error.toString()}`
             };
         }
         
 		return {
             action: "register",
-			message: "Erfolgreich registriert! Bitte melden sie sich mit ihren gewählten Anmeldedaten an.",
+			message: "Erfolgreich registriert!",
             error: null
 		};
 	},
@@ -41,17 +39,17 @@ export const actions: Actions = {
         } catch(error: any) {
             return {
                 action: "login",
-                error:  `Fehler beim einloggen: ${error.response.message !== undefined ? error.response.message : error}`,
+                error:  `Fehler beim einloggen: ${error.toString()}`,
                 message: null
             };
         }
-        
-        if(locals.pb.authStore.isValid === true) { request.headers.set("set-cookie", locals.pb.authStore.exportToCookie({ secure: !dev }, "pb_auth")); }
 
-		return {
-			action: "login",
-            message: locals.pb.authStore.isValid ? "Erfolgreich eingeloggt." : null,
-			error: locals.pb.authStore.isValid ? null : "Fehler beim einloggen."
-		};
+        if(locals.pb.authStore.isValid === true) {
+            return {
+                action: "login",
+                message: locals.pb.authStore.isValid ? "Erfolgreich eingeloggt." : null,
+                error: locals.pb.authStore.isValid ? null : "Fehler beim einloggen."
+            };
+        }
 	}
 }
